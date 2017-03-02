@@ -24,10 +24,20 @@
 
 **Route**                | **HTTP**      | **Description**
 -------------------------|---------------|------------------------
-/login/twitter			     | GET           | Print: Login page on FB
+/login/twitter			     | GET           | Print: Login page on Twitter
 /login/twitter/callback  | GET           | Print: Callback
-/login/twitter			     | POST          | Print: Page on FB
+/login/twitter			     | POST          | Print: Page on Twitter
 /login/twitter/exit      | GET           | Print: Logout
+
+#### List of passport-google routes:
+
+**Route**                | **HTTP**      | **Description**
+-------------------------|---------------|------------------------
+/login/google 			     | GET           | Print: Login page on Google
+/login/google/callback   | GET           | Print: Callback
+/login/google 			     | POST          | Print: Page on Google
+/login/google/exit       | GET           | Print: Logout
+
 
 ### **USAGE**
 #### With only npm:
