@@ -4,6 +4,7 @@ var favicon = require('serve-favicon')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
+var session = require('express-session')
 
 // INITIAL MONGOOSE & MONGODB
 const mongoose = require('mongoose')
@@ -13,8 +14,8 @@ mongoose.Promise = global.Promise
 // INITIAL PASSPORT & PASSPORT-LOCAL
 const passport = require('passport')
 require('./passports/passport-local')
-
 require('./passports/passport-facebook')
+require('./passports/passport-twitter')
 
 var index = require('./routes/index')
 var users = require('./routes/users')
@@ -30,6 +31,11 @@ app.set('view engine', 'ejs')
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(session({
+  secret: 'passport-twitter',
+  resave: false,
+  saveUninitialized: true
+}))
 app.use(passport.initialize())
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
