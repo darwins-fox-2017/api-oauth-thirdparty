@@ -7,7 +7,6 @@ const models = require('../models')
 
 passport.use(new passportStrategy(
   (username, password, cb) => {
-    console.log('username: ', username)
     models.User.findOne({
       username: username,
       password: password
