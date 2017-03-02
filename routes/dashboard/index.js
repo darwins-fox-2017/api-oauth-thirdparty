@@ -3,9 +3,9 @@ var router = express.Router();
 
 router.get('/', function(req, res, next){
   // res.json(req.session)
-  console.log(req.user.local.email);
-  if(req.session.passport){
-    res.render('dashboard/index', {username: req.user.local.email})
+  if(req.user){
+    console.log(req.user.local.email);
+    res.render('dashboard/index', {username: req.user.local.email, user: req.user})
 
   } else {
     res.redirect('/login')

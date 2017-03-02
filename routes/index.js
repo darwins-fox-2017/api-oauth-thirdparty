@@ -41,7 +41,6 @@ router.get('/', function(req, res, next) {
     // res.json(req.session.passport.user)
     res.render('index', {
         title: 'Express',
-        username: req.username
     });
 });
 
@@ -57,7 +56,6 @@ router.get('/auth/facebook/callback',
         failureRedirect: '/'
     }),
     function(req, res) {
-      console.log(profile);
         res.redirect('/dashboard/facebook');
     });
 
