@@ -19,5 +19,8 @@ module.exports = {
   },
   passport_local: (req, res) => {
     res.send(res.req.user)
+  },
+  passport_facebook: (req, res) => {
+    res.send(req.res.user)
   }
 }

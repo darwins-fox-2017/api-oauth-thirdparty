@@ -12,7 +12,9 @@ mongoose.Promise = global.Promise
 
 // INITIAL PASSPORT & PASSPORT-LOCAL
 const passport = require('passport')
-const passportStrategy = require('passport-local').Strategy
+require('./passports/passport-local')
+
+require('./passports/passport-facebook')
 
 var index = require('./routes/index')
 var users = require('./routes/users')
