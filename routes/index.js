@@ -2,35 +2,24 @@ var express = require('express');
 var router = express.Router();
 
 var passport = require('passport');
-var Account = require('../models/account');
 
 router.get('/register', function(req, res, next) {
     res.render('auth/register')
 })
 
-router.post('/register', function(req, res, next) {
-    Account.register(new Account({
-        username: req.body.username
-    }), req.body.password, function(err, account) {
-        console.log('account : ', account);
-        if (err) {
-            return res.render('auth/register', {
-                account: account
-            });
-        }
-        passport.authenticate('local')(req, res, function() {
-            res.redirect('/dashboard');
-        });
-    });
-})
+router.post('/register', passport.authenticate('local-signup', {
+    successRedirect : '/dashboard',
+    failureRedirect : '/register'
+}))
 
 router.get('/login', function(req, res, next) {
     res.render('auth/login')
 })
 
-router.post('/login', passport.authenticate('local'), function(req, res, next) {
-    res.redirect('/dashboard');
-})
+router.post('/login', passport.authenticate('local-login', {
+  successRedirect: '/dashboard',
+  failureRedirect: '/login'
+}))
 
 router.get('/logout', function(req, res) {
     req.session.destroy(function(err) {
@@ -55,5 +44,21 @@ router.get('/', function(req, res, next) {
         username: req.username
     });
 });
+
+
+router.get('/auth/facebook',
+    passport.authenticate('facebook'),
+    function(req, res) {
+
+    });
+
+router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', {
+        failureRedirect: '/'
+    }),
+    function(req, res) {
+      console.log(profile);
+        res.redirect('/dashboard/facebook');
+    });
 
 module.exports = router;
