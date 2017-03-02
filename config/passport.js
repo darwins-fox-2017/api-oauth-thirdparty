@@ -4,6 +4,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const GithubStrategy = require('passport-github').Strategy;
+const User = require('../models/user')
 const hash = require('password-hash')
 require('dotenv').config()
 
@@ -23,7 +24,7 @@ module.exports = function (passport) {
 //------------------------LocalStrategy----------------------------------------------
   passport.use('didit-login', new LocalStrategy(function(usernameInput, password, cb){
 
-    User.findOne({ username: usernameInput }, function(err, data){
+    User.findOne({ local.username: usernameInput }, function(err, data){
       if (!data) {
         cb(null, false)
       }else{
@@ -41,9 +42,9 @@ module.exports = function (passport) {
 
 //------------------------Twitter STrategy----------------------------------------------
   passport.use(new TwitterStrategy({
-    consumerKey: configAuth.twitterAuth.consumerKey,
-    consumerSecret: configAuth.twitterAuth.consumerSecret,
-    callbackURL: configAuth.twitterAuth.callbackURL
+    consumerKey: process.env.twitterConsumerKey,
+    consumerSecret: process.env.twitterConsumerSecret,
+    callbackURL: process.env.twitterCallbackURL
   },
   function (token, tokenSecret, profile, done) {
     process.nextTick(function () {
@@ -68,9 +69,9 @@ module.exports = function (passport) {
 
 //------------------------Facebook Strategy----------------------------------------------
 passport.use(new FacebookStrategy({
-  clientID: configAuth.facebookAuth.clientID,
-  clientSecret: configAuth.facebookAuth.clientSecret,
-  callbackURL: configAuth.facebookAuth.callbackURL
+  clientID: process.env.facebookClientID,
+  clientSecret: process.env.facebookClientSecret,
+  callbackURL: process.env.facebookCallbackURL
 },
 function (token, refreshToken, profile, done) {
   process.nextTick(function () {
@@ -94,9 +95,9 @@ function (token, refreshToken, profile, done) {
 
 //------------------------GoogleStrategy----------------------------------------------
 passport.use(new GoogleStrategy({
-  clientID: configAuth.googleAuth.clientID,
-  clientSecret: configAuth.googleAuth.clientSecret,
-  callbackURL: configAuth.googleAuth.callbackURL
+  clientID: process.env.googleClientID,
+  clientSecret: process.env.googleClientSecret,
+  callbackURL: process.env.googleCallbackURL
 },
 function (token, refreshToken, profile, done) {
   process.nextTick(function () {
@@ -120,9 +121,9 @@ function (token, refreshToken, profile, done) {
 ))
 //------------------------github Strategy----------------------------------------------
 passport.use(new GitHubStrategy({
-  clientID: configAuth.githubAuth.clientID,
-  clientSecret: configAuth.githubAuth.clientSecret,
-  callbackURL: configAuth.githubAuth.callbackURL
+  clientID: process.env.githubClientID,
+  clientSecret: process.env.githubClientSecret,
+  callbackURL: process.env.githubCallbackURL
 },
 function(token, refreshToken, profile, cb) {
   process.nextTick(function () {
