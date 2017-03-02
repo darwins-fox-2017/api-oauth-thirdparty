@@ -8,8 +8,8 @@ router.get('/register', function(req, res, next) {
 })
 
 router.post('/register', passport.authenticate('local-signup', {
-    successRedirect : '/dashboard',
-    failureRedirect : '/register'
+    successRedirect: '/dashboard',
+    failureRedirect: '/register'
 }))
 
 router.get('/login', function(req, res, next) {
@@ -17,8 +17,8 @@ router.get('/login', function(req, res, next) {
 })
 
 router.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/dashboard',
-  failureRedirect: '/login'
+    successRedirect: '/dashboard',
+    failureRedirect: '/login'
 }))
 
 router.get('/logout', function(req, res) {
@@ -45,14 +45,21 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+router.get('/auth/facebook', passport.authenticate('facebook', {
+    scope: 'email'
+}));
 
 router.get('/auth/facebook/callback',
-        passport.authenticate('facebook', {
-            successRedirect : '/dashboard',
-            failureRedirect : '/'
-        }));
+    passport.authenticate('facebook', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/'
+    }));
 
+router.get('/auth/twitter', passport.authenticate('twitter'))
 
+router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+  successRedirect: '/dashboard',
+  failureRedirect: '/'
+}))
 
 module.exports = router;

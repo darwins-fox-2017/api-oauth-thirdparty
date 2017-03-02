@@ -19,6 +19,7 @@ var app = express();
 let passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy
 
 var oauthConfig = require('./config/oauth.js');
 
@@ -123,6 +124,42 @@ passport.use(new FacebookStrategy({
         });
     }
 ));
+
+passport.use(new TwitterStrategy({
+  consumerKey: oauthConfig.twitter.consumerKey,
+  consumerSecret: oauthConfig.twitter.consumerSecret,
+  callbackURL: oauthConfig.twitter.callbackURL
+}, function(token, tokenSecret, profile, done){
+  console.log('dffssaf', profile);
+  process.nextTick(function(){
+
+    User.findOne({
+      'twitter.id': profile.id
+    }, function(err, user){
+      if (err) {
+        return done(err)
+      }
+
+      if(user){
+        return done(err, user)
+      } else {
+        let newUser = new User()
+        newUser.twitter.id = profile.id
+        newUser.twitter.token = token
+        newUser.twitter.username = profile.username
+        newUser.twitter.displayName = profile.displayName
+
+        newUser.save(function(err){
+          if (err) {
+            throw err
+          }
+
+          return done(null, newUser)
+        })
+      }
+    })
+  })
+}))
 
 app.use(bodyParser());
 
