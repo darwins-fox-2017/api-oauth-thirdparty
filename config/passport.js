@@ -1,9 +1,9 @@
 `use strict`
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const GoogleStrategy = require('passport-google').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
-const GithubStrategy = require('passport-github').Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
 const User = require('../models/user')
 const hash = require('password-hash')
 require('dotenv').config()
@@ -24,11 +24,11 @@ module.exports = function (passport) {
 //------------------------LocalStrategy----------------------------------------------
   passport.use('didit-login', new LocalStrategy(function(usernameInput, password, cb){
 
-    User.findOne({ local.username: usernameInput }, function(err, data){
+    User.findOne({ 'local.username': usernameInput }, function(err, data){
       if (!data) {
         cb(null, false)
       }else{
-        if (hash.verify(password, data.password)) {
+        if (hash.verify(password, data.local.password)) {
           cb(null, data)
         }else{
           cb(null, false)
@@ -51,15 +51,14 @@ module.exports = function (passport) {
       User.findOne({ 'twitter.id': profile.id }, function (err, user) {
         if (err) return done(err)
         if (user) { return done(null, user) } else {
-          var newUser = new User()
-          newUser.twitter.id = profile.id
-          newUser.twitter.token = token
-          newUser.twitter.username = profile.username
-          newUser.twitter.displayName = profile.displayName
-
-          newUser.save(function (err) {
-            if (err) throw err
-            return done(null, newUser)
+          User.create({
+            'twitter.id' : profile.id,
+            'twitter.token' : token,
+            'twitter.username' : profile.username,
+            'twitter.name' : profile.displayName
+          }, function(err,data){
+            if(err) throw err;
+            return done(null, data)
           })
         }
       })
@@ -78,14 +77,14 @@ function (token, refreshToken, profile, done) {
     User.findOne({ 'facebook.id': profile.id }, function (err, user) {
       if (err) return done(err)
       if (user) { return done(null, user) } else {
-        var newUser = new User()
-        newUser.facebook.id = profile.id
-        newUser.facebook.token = token
-        newUser.facebook.name = profile.displayName
-
-        newUser.save(function (err) {
-          if (err) throw err
-          return done(null, newUser)
+        User.create({
+          'facebook.id' : profile.id,
+          'facebook.token' : token,
+          'facebook.name' : profile.username,
+          'facebook.email' : profile.displayName
+        }, function(err,data){
+          if(err) throw err;
+          return done(null, data)
         })
       }
     })
@@ -104,15 +103,14 @@ function (token, refreshToken, profile, done) {
     User.findOne({ 'google.id': profile.id }, function (err, user) {
       if (err) return done(err)
       if (user) { return done(null, user) } else {
-        var newUser = new User()
-        newUser.google.id = profile.id
-        newUser.google.token = token
-        newUser.google.email = profile.emails[0].value
-        newUser.google.name = profile.displayName
-
-        newUser.save(function (err) {
-          if (err) throw err
-          return done(null, newUser)
+        User.create({
+          'google.id' : profile.id,
+          'google.token' : token,
+          'google.email' : profile.emails[0].value,
+          'google.name' : profile.displayName
+        }, function(err,data){
+          if(err) throw err;
+          return done(null, data)
         })
       }
     })
@@ -130,20 +128,18 @@ function(token, refreshToken, profile, cb) {
   User.findOne({ githubId: profile.id }, function (err, user) {
     if (err) return done(err)
     if (user) { return done(null, user) } else {
-      var newUser = new User()
-      newUser.github.id = profile.id
-      newUser.github.token = token
-      newUser.github.displayName = profile.displayName
-      newUser.github.username = profile.username
-
-      newUser.save(function (err) {
-        if (err) throw err
-        return done(null, newUser)
+      User.create({
+        'github.id' : profile.id,
+        'github.token' : token,
+        'github.username' : profile.username,
+        'github.name' : profile.displayName
+      }, function(err,data){
+        if(err) throw err;
+        return done(null, data)
       })
     }
   })
 })
 }
 ))
-
 }
