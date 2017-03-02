@@ -45,18 +45,14 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.get('/auth/facebook',
-    passport.authenticate('facebook'),
-    function(req, res) {
-
-    });
+router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
 
 router.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {
-        failureRedirect: '/'
-    }),
-    function(req, res) {
-        res.redirect('/dashboard/facebook');
-    });
+        passport.authenticate('facebook', {
+            successRedirect : '/dashboard',
+            failureRedirect : '/'
+        }));
+
+
 
 module.exports = router;
