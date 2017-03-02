@@ -20,6 +20,7 @@ let passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 var oauthConfig = require('./config/oauth.js');
 
@@ -102,7 +103,6 @@ passport.use(new FacebookStrategy({
               return done(null, user)
             } else {
 
-              console.log('dfsjfdsahfsdfk ds', profile);
               var newUser = new User()
 
               newUser.facebook.id = profile.id
@@ -130,9 +130,7 @@ passport.use(new TwitterStrategy({
   consumerSecret: oauthConfig.twitter.consumerSecret,
   callbackURL: oauthConfig.twitter.callbackURL
 }, function(token, tokenSecret, profile, done){
-  console.log('dffssaf', profile);
   process.nextTick(function(){
-
     User.findOne({
       'twitter.id': profile.id
     }, function(err, user){
@@ -148,6 +146,44 @@ passport.use(new TwitterStrategy({
         newUser.twitter.token = token
         newUser.twitter.username = profile.username
         newUser.twitter.displayName = profile.displayName
+
+        newUser.save(function(err){
+          if (err) {
+            throw err
+          }
+
+          return done(null, newUser)
+        })
+      }
+    })
+  })
+}))
+
+passport.use(new GoogleStrategy({
+
+    clientID        : oauthConfig.google.clientID,
+    clientSecret    : oauthConfig.google.clientSecret,
+    callbackURL     : oauthConfig.google.callbackURL,
+
+}, function(token, refreshToken, profile, done){
+  process.nextTick(function(){
+    console.log('profile', profile);
+    User.findOne({
+      'google.id': profile.id
+    }, function(err, user){
+      if (err) {
+        return done(err)
+      }
+
+      if (user) {
+        return done(user)
+      } else {
+        let newUser = new User()
+
+        newUser.google.id = profile.id
+        newUser.google.name = profile.displayName
+        newUser.google.email = profile.emails[0].value
+        newUser.google.token = token
 
         newUser.save(function(err){
           if (err) {
