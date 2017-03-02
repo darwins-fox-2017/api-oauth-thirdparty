@@ -25,5 +25,8 @@ module.exports = {
   },
   passport_twitter: (req, res) => {
     res.send(res.req.user)
+  },
+  passport_google: (req, res) => {
+    res.send(res.req.user)
   }
 }

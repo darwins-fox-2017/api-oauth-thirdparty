@@ -16,6 +16,7 @@ const passport = require('passport')
 require('./passports/passport-local')
 require('./passports/passport-facebook')
 require('./passports/passport-twitter')
+require('./passports/passport-google')
 
 var index = require('./routes/index')
 var users = require('./routes/users')

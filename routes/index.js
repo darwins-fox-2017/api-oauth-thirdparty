@@ -21,4 +21,8 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook', { failur
 router.get('/auth/twitter', passport.authenticate('twitter'))
 router.get('/auth/twitter/callback', passport.authenticate('twitter', {failureRedirect: '/failed' }), controllers.passport_twitter)
 
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }))
+
+router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), controllers.passport_google)
+
 module.exports = router
