@@ -15,11 +15,11 @@ module.exports = function (passport) {
     callback(null, user)
   })
 
-  // passport.deserializeUser(function (id, done) {
-  //  User.findById(id, function (err, user) {
-  //    done(err, user)
-  //  })
-  // })
+  passport.deserializeUser(function (id, done) {
+   User.findById(id, function (err, user) {
+     done(err, user)
+   })
+  })
 
 //------------------------LocalStrategy----------------------------------------------
   passport.use('didit-login', new LocalStrategy(function(usernameInput, password, cb){
@@ -71,7 +71,7 @@ passport.use(new FacebookStrategy({
   clientID: process.env.facebookClientID,
   clientSecret: process.env.facebookClientSecret,
   callbackURL: process.env.facebookCallbackURL,
-  profileFields: ['id', 'emails', 'name']
+  profileFields: ['id', 'emails', 'displayName']
 },
 function (token, refreshToken, profile, done) {
   process.nextTick(function () {
@@ -97,7 +97,7 @@ function (token, refreshToken, profile, done) {
 passport.use(new GoogleStrategy({
   clientID: process.env.googleClientID,
   clientSecret: process.env.googleClientSecret,
-  callbackURL: process.env.googleCallbackURL
+  callbackURL:  process.env.googleCallbackURL
 },
 function (token, refreshToken, profile, done) {
   process.nextTick(function () {
@@ -124,7 +124,7 @@ passport.use(new GitHubStrategy({
   clientSecret: process.env.githubClientSecret,
   callbackURL: process.env.githubCallbackURL
 },
-function(token, refreshToken, profile, cb) {
+function(token, refreshToken, profile, done) {
   process.nextTick(function () {
   User.findOne({ githubId: profile.id }, function (err, user) {
     if (err) return done(err)
