@@ -22,5 +22,8 @@ module.exports = {
   },
   passport_facebook: (req, res) => {
     res.send(req.res.user)
+  },
+  passport_twitter: (req, res) => {
+    res.send(req.res.user)
   }
 }

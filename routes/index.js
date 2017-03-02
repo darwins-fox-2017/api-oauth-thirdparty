@@ -8,12 +8,15 @@ require('../passports/passport-local.js')
 
 /* GET home page. */
 router.get('/', controllers.seed_data_users)
-router.post('/login', passport.authenticate('local', {failureRedirect: '/failed'}), controllers.passport_local)
+router.post('/login',
+  passport.authenticate('local', {failureRedirect: '/failed'}), controllers.passport_local)
 
 router.get('/auth/facebook',
   passport.authenticate('facebook'))
 
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }), controllers.passport_facebook)
+
+router.get('/login-twitter', controllers.passport_twitter)
 
 module.exports = router
