@@ -5,9 +5,14 @@ var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 
+// INITIAL MONGOOSE & MONGODB
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/user')
+mongoose.connect('mongodb://localhost/api-oauth-3rdparty')
 mongoose.Promise = global.Promise
+
+// INITIAL PASSPORT & PASSPORT-LOCAL
+const passport = require('passport')
+const passportStrategy = require('passport-local').Strategy
 
 var index = require('./routes/index')
 var users = require('./routes/users')
@@ -23,6 +28,7 @@ app.set('view engine', 'ejs')
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(passport.initialize())
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
