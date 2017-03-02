@@ -8,6 +8,7 @@ var mongoose = require('mongoose')
 var index = require('./routes/index');
 var users = require('./routes/users');
 var passport = require('passport')
+var session = require('express-session')
 var app = express();
 
 mongoose.connect('mongodb://localhost/otentikasi', function (err) {
@@ -20,7 +21,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Passport --------
+app.use(session({
+  secret: 'rahasialoh',
+  key: 'sid',
+  resave: false,
+  saveUninitialized: true
+}))
+
 app.use(passport.initialize())
+app.use(passport.session())
 require('./config/passport')(passport)
 //-----------------//
 // uncomment after placing your favicon in /public

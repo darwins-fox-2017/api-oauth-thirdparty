@@ -11,9 +11,9 @@ module.exports = {
 
   register: function(req, res, next) {
     User.create({
-      username: req.body.username,
-      password: hash.generate(req.body.password),
-      email: req.body.email
+      'local.username': req.body.username,
+      'local.password': hash.generate(req.body.password),
+      'local.email': req.body.email
     }, function(err,data){
       if(err) throw err;
       res.json(data)

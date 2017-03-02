@@ -70,7 +70,8 @@ module.exports = function (passport) {
 passport.use(new FacebookStrategy({
   clientID: process.env.facebookClientID,
   clientSecret: process.env.facebookClientSecret,
-  callbackURL: process.env.facebookCallbackURL
+  callbackURL: process.env.facebookCallbackURL,
+  profileFields: ['id', 'emails', 'name']
 },
 function (token, refreshToken, profile, done) {
   process.nextTick(function () {
@@ -80,8 +81,8 @@ function (token, refreshToken, profile, done) {
         User.create({
           'facebook.id' : profile.id,
           'facebook.token' : token,
-          'facebook.name' : profile.username,
-          'facebook.email' : profile.displayName
+          'facebook.name' : profile.displayName,
+          'facebook.email' : profile.emails[0].value
         }, function(err,data){
           if(err) throw err;
           return done(null, data)
