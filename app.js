@@ -11,7 +11,7 @@ var flash    = require('connect-flash');
 var mongoose = require('mongoose')
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/library')
-
+require('dotenv').config()
 var app = express();
 
 // passport
